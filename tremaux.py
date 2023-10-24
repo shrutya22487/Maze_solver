@@ -1,56 +1,80 @@
-import random
+def is_valid_move(matrix, x, y):    #if the move made is within bounds
+    return 0 <= x < len(matrix) and 0 <= y < len(matrix[0]) and matrix[x][y] != 0
+
+def is_junction(matrix, x, y):
+    valid_moves = sum(1 for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)] if is_valid_move(matrix, x + dx, y + dy))
+    return valid_moves >= 3
+
+def mark_entrance(matrix, x, y):        #marks entrance of a path based on it's previous marking value
+    if matrix[x][y] == 1:
+        matrix[x][y] = 2
+        return True
+    elif matrix[x][y] == 2:
+        matrix[x][y] = 3
+        return True
+    
+    return False
+
+def dead_end(valid_moves):
+    if len(valid_moves) == 1:
+        return True
+    return False
+
 def tremaux(matrix):
-    stack ,single_marked , double_marked , visited = [],[],[],[]
-    x,y , w = 0 , 0, 1
-    while len(stack) > 0:                                          # loop until stack is empty
-        cell = []                                                  # define cell list
-        if (x + w, y) not in visited and (x + w, y) in matrix:       # right cell available?
-            cell.append("right")                                   # if yes add to cell list
+    stack = []
+    x,y, prev_x, prev_y  = 1, 1, 0, 0
 
-        if (x - w, y) not in visited and (x - w, y) in matrix:       # left cell available?
-            cell.append("left")
+    mark_entrance(matrix , x, y)                    # mark entrance path
 
-        if (x , y + w) not in visited and (x , y + w) in matrix:     # down cell available?
-            cell.append("down")
+    length = len(matrix)
 
-        if (x, y - w) not in visited and (x , y - w) in matrix:      # up cell available?
-            cell.append("up")
+    stack.append((x, y))
 
-        if len(cell) > 0:                                          # check to see if cell list is empty
-            cell_chosen = (random.choice(cell))                    # select one of the cell randomly
+    while len(stack) > 0:
 
-            if cell_chosen == "right":                             # if this cell has been chosen
-                push_right(x, y)                                   # call push_right function
-                solution[(x + w, y)] = x, y                        # solution = dictionary key = new cell, other = current cell
-                x = x + w                                          # make this cell the current cell
-                visited.append((x, y))                              # add to visited list
-                stack.append((x, y))                                # place current cell on to stack
+        x, y = stack.pop()
 
-            elif cell_chosen == "left":
-                push_left(x, y)
-                solution[(x - w, y)] = x, y
-                x = x - w
-                visited.append((x, y))
-                stack.append((x, y))
+        if x == length - 2 and y == length - 2:         #Maze solved
+            break
 
-            elif cell_chosen == "down":
-                push_down(x, y)
-                solution[(x , y + w)] = x, y
-                y = y + w
-                visited.append((x, y))
-                stack.append((x, y))
+        valid_moves = [(dx, dy) for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)] if is_valid_move(matrix, x + dx, y + dy)]# all possible movements available regardless of marking
 
-            elif cell_chosen == "up":
-                push_up(x, y)
-                solution[(x , y - w)] = x, y
-                y = y - w
-                visited.append((x, y))
-                stack.append((x, y))
-        else:
-            x, y = stack.pop()                                    # if no cells are available pop one from the stack
-            single_cell(x, y)                                     # use single_cell function to show backtracking image
-            time.sleep(.05)                                       # slow program down a bit
-            backtracking_cell(x, y) 
+        if is_junction(matrix, x, y):
+            flag = False #to check if we found a way
+            mark_entrance(matrix ,prev_x , prev_y) # mark the entrance u r leaving
+            
+            for i in valid_moves: #checking unmarked entrances
+
+                possible_x, possible_y = i
+                if matrix[possible_x][possible_y] == 1:
+                    next_x, next_y = possible_x, possible_y 
+                    mark_entrance(matrix, next_x , next_y)       
+                    prev_x, prev_y = x, y
+                    flag = True
+                    break
+
+            if (not flag and matrix[prev_x][prev_y] != 3): #go back the current path if not marked twice
+                next_x, next_y = prev_x, prev_y
+                mark_entrance(matrix, prev_x , prev_y)
+
+            if ( not flag ):    #else pick any entrance marked once
+                for i in valid_moves:  
+                    if matrix[possible_x][possible_y] == 2:
+                        next_x, next_y = possible_x, possible_y  
+                        mark_entrance(matrix, next_x , next_y)      
+                        prev_x, prev_y = x, y
+                        break
+
+        else:                   # otherwise it's a normal path continue as needed
+            if dead_end(valid_moves):
+                mark_entrance(matrix, x, y)
+                next_x, next_y = x, y
+            elif ( len(valid_moves) >= 2 ):
+                valid_moves.remove((prev_x, prev_y))
+            prev_x, prev_y = x, y
+            next_x, next_y = valid_moves[0][0], valid_moves[0][1]
+
+        stack.append((next_x ,next_y))
 
 
 

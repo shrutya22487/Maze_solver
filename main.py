@@ -39,6 +39,7 @@ matrix = [
     [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
+#graphics functions
 
 def blit_grid(matrix):
     for i in range(0 , len(matrix)):
