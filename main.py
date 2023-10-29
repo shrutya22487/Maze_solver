@@ -15,7 +15,7 @@ TEMP = (210, 0, 210)
 BLACK = (0, 0, 0)
 
 def is_valid_move(matrix, x, y):    #if the move made is within bounds
-    return 0 <= x < len(matrix) and 0 <= y < len(matrix[0]) and matrix[x][y] != 0 and matrix[x][y] != 3
+    return 0 <= x < len(matrix) and 0 <= y < len(matrix[0]) and matrix[x][y] != 0
 
 def is_junction(valid_moves):
     return len(valid_moves) >= 3
@@ -41,25 +41,25 @@ def blit_grid(matrix):
                 pygame.draw.rect(maze_surface ,BLUE , ( 1 + 30*i ,1 + 30*j ,30, 30 ) ,4)
             elif matrix[j][i] == 1:
                 pygame.draw.rect(maze_surface , BLACK , ( 1 + 30*i ,1 + 30*j ,30, 30 ) ,4)
-            elif matrix[j][i] == 2:
-                pygame.draw.rect(maze_surface ,GREEN , ( 1 + 30*i ,1 + 30*j ,30, 30 ) ,4)
-            elif matrix[j][i] == 3:
-                pygame.draw.rect(maze_surface ,RED , ( 1 + 30*i ,1 + 30*j ,30 , 30 ) ,4)
+            # elif matrix[j][i] == 2:
+            #     pygame.draw.rect(maze_surface ,GREEN , ( 1 + 30*i ,1 + 30*j ,30, 30 ) ,4)
+            # elif matrix[j][i] == 3:
+            #     pygame.draw.rect(maze_surface ,RED , ( 1 + 30*i ,1 + 30*j ,30 , 30 ) ,4)
 
 def tremaux(matrix):
 
     x,y, prev_x, prev_y  = 1, 1, 0, 0
 
-    mark_entrance(matrix , x, y)                    # mark entrance path
+    mark_entrance(matrix , x, y)
 
     length = len(matrix)
 
-    while True:
+    while not(x == length - 2 and y == length - 2):
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-
 
         #adding surfaces
         screen.blit(background , (0,0)) 
@@ -67,9 +67,6 @@ def tremaux(matrix):
 
         pygame.display.update()
         clock.tick(60)
-
-        if x == length - 2 and y == length - 2:         #Maze solved
-            break
 
         valid_moves = [( x + dx, y + dy) for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)] if is_valid_move(matrix, x + dx, y + dy)]# all possible movements available regardless of marking
 
@@ -104,11 +101,13 @@ def tremaux(matrix):
         else:                   # otherwise it's a normal path continue as needed
             if dead_end(valid_moves):
                 mark_entrance(matrix, x, y)
+                mark_entrance(matrix, x, y)
                 prev_x, prev_y = x, y
                 next_x, next_y = valid_moves[0][0], valid_moves[0][1]
 
             elif ( len(valid_moves) >= 2 ):
-                valid_moves.remove((prev_x, prev_y))
+                if ( prev_x, prev_y ) in valid_moves:
+                    valid_moves.remove((prev_x, prev_y))
                 prev_x, prev_y = x, y
                 next_x, next_y = valid_moves[0][0], valid_moves[0][1]
               
@@ -116,6 +115,36 @@ def tremaux(matrix):
         pygame.draw.rect(maze_surface , TEMP , ( 1 + 30 * x ,1 + 30 * y ,30 ,30 ) ,4)
 
         blit_grid(matrix)
+
+def dfs_with_path(maze, start, goal):
+    
+    moves = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+    rows, cols = len(maze), len(maze[0])
+    def is_valid(x, y):
+        return 0 <= x < rows and 0 <= y < cols and maze[x][y] == 1 
+
+    def dfs_search(x, y, path):
+        maze[x][y] = 2
+
+        if (x, y) == goal:
+            path.append((x, y))
+            return True
+
+        for dx, dy in moves:
+            new_x, new_y = x + dx, y + dy
+            if is_valid(new_x, new_y):
+                if dfs_search(new_x, new_y, path):
+                    path.append((x, y))  
+                    return True
+
+        return False
+
+    path = []
+    if dfs_search(start[0], start[1], path):
+        for x, y in path:
+            maze[x][y] = 3
+        return path[::-1] 
+    return None  
 
 # main surfaces for the display
 
@@ -148,22 +177,23 @@ matrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 #graphics functions
-# tremaux.tremaux(matrix)
 # print(matrix)
+path = dfs_with_path(matrix , (1, 1), ( len(matrix) - 2 , len(matrix) - 2))
+print(path)
+# tremaux(matrix)
 
-
-
-tremaux(matrix)
 #Game Loop
-# while True:
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             pygame.quit()
-#             exit()
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
 
-#     #adding surfaces
-#     screen.blit(background , (0,0)) 
-#     screen.blit(maze_surface , (50 , 50))
-#     blit_grid(matrix)
-#     pygame.display.update()
-#     clock.tick(60)
+    #adding surfaces
+    screen.blit(background , (0,0)) 
+    screen.blit(maze_surface , (50 , 50))
+    blit_grid(matrix)
+    for (i, j) in path:
+        pygame.draw.rect(maze_surface ,TEMP , ( 10 + 30*j , 10 + 30*i ,15, 15 ) ,5)
+    pygame.display.update()
+    clock.tick(60)
