@@ -12,7 +12,7 @@ pygame.display.set_caption("Maze Solver")
 clock = pygame.time.Clock()
 
 #Colours
-CELL_SIZE = 20 
+CELL_SIZE = 35 
 WALL_COLOR = (0, 0, 0)  # Black
 PATH_COLOR = (0, 0, 0)  # White
 BLUE = (0, 0, 255)
