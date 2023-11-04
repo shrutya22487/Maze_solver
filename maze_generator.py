@@ -5,22 +5,23 @@ import time
 from sys import exit
 
 pygame.init()
-width, height = 10, 10
-SCREEN_WIDTH, SCREEN_HEIGHT = 350, 350
+width, height = 20, 20
+SCREEN_WIDTH, SCREEN_HEIGHT = 750, 750
 wall_thickness = 2
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Maze Solver")
 clock = pygame.time.Clock()
+directions = {'forward':'N','left':'W','back':'S','right':'E'} #standard directions
 
 # Colours
 CELL_SIZE = 35
+SMALL_BLOCK_SIZE = 10
 WALL_COLOR = (0, 0, 0)  # Black
 PATH_COLOR = (0, 0, 0)  # White
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 TEMP = (210, 0, 210)
-
 
 class Cell:
     def __init__(self):  # in directions 1 represents open path and 0 closed path
@@ -46,11 +47,8 @@ class Cell:
         self.W = 1  # carving in the north direction
         cell.E = 1  # for the upper cell the opposite direction will be taken
 
-
 def check_bounds(nx, ny):
     return ny < height and ny >= 0  and nx < width and nx >=0
-
-
 
 def draw_maze(grid):
     screen.fill((0, 0, 0))
@@ -72,8 +70,21 @@ def draw_maze(grid):
     pygame.draw.rect(screen, BLUE, (width * CELL_SIZE, 0, wall_thickness, CELL_SIZE*width))
     pygame.display.update()
 
-grid = [[Cell() for i in range(width)] for i in range(height)]
+def make_borders(grid):
+    #top border:
+    for i in grid[0]:
+        i.N = 0
+    #bottom border
+    for i in grid[height - 1]:
+        i.S = 0
+    #left border
+    for i in range(height):
+        grid[i][0].W = 0
+    #right border
+    for i in range(height):
+        grid[i][width - 1].E = 0
 
+grid = [[Cell() for i in range(width)] for i in range(height)]
 
 def choose_random_adjacent(x,y):
 
@@ -121,13 +132,11 @@ def choose_random_adjacent(x,y):
                 grid[x][y].carve_west(grid[x - 1][y])
                 return x-1 ,y
 
-
 # initialising list
 visited = []
 visited_with_visited_neigh= []
 x= random.randint(0,width-1)
 y= random.randint(0,height-1)
-
 visited.append((x,y))
 
 while visited:
@@ -146,17 +155,186 @@ while visited:
         visited.append((x1,y1))
 
     draw_maze(grid)
-    pygame.time.delay(10)
+    pygame.time.delay(5)
 
+def rotate_clockwise():
+    global directions
+    keys = list(directions.keys())
+    v = list(directions.values())
+    v_rotated=[v[-1]]+v[:-1]
+    directions = dict(zip(keys,v_rotated))
+
+def rotate_anti_clockwise():
+    global directions
+    keys = list(directions.keys())
+    v = list(directions.values())
+    v_rotated=v[1:]+[v[0]]
+    directions = dict(zip(keys,v_rotated))
+
+def moveForward(x, y):
+    global directions
+    if directions['forward']=='E':
+        return x, y + 1
+    if directions['forward']=='W':
+        return x,y-1
+    if directions['forward']=='N':
+        return x - 1, y
+    if directions['forward']=='S':
+        return x + 1 , y
+
+# def draw_path(x, y):
+#     #figuring out where left wall is
+#     if directions['left'] == "N":
+
+
+
+
+#     cell_x = x * CELL_SIZE
+#     cell_y = y * CELL_SIZE
+#     pygame.display.update()
+
+
+x, y = 0, 0
+while not( x == width - 1 and y == height - 1 ) :
+    #checking left wall
+    if directions['left']=='E':
+        if grid[y][x].E == 0:
+            #checking front wall
+            if directions['forward']=='E':
+                if grid[y][x].E == 0:
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+            elif directions['forward']=='W':
+                if grid[y][x].W == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+                
+            elif directions['forward']=='N':
+                if grid[y][x].N == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)    
+            elif directions['forward']=='S':
+                if grid[y][x].S == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)  
+        else:
+            rotate_anti_clockwise()
+            x, y = moveForward(x, y)               
+    
+    elif directions['left']=='N':
+        if grid[y][x].N == 0:
+            #checking front wall
+            if directions['forward']=='E':
+                if grid[y][x].E == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+            elif directions['forward']=='W':
+                if grid[y][x].W == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+                
+            elif directions['forward']=='N':
+                if grid[y][x].N == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)    
+            elif directions['forward']=='S':
+                if grid[y][x].S == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)  
+        else:
+            rotate_anti_clockwise()
+            x, y = moveForward(x, y)  
+        
+    elif directions['left']=='W':
+        if grid[y][x].W == 0:
+            #checking front wall
+            if directions['forward']=='E':
+                if grid[y][x].E == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+            elif directions['forward']=='W':
+                if grid[y][x].W == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+                
+            elif directions['forward']=='N':
+                if grid[y][x].N == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)    
+            elif directions['forward']=='S':
+                if grid[y][x].S == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)  
+        else:
+            rotate_anti_clockwise()
+            x, y = moveForward(x, y)  
+
+    elif directions['left']=='S':
+        if grid[y][x].S == 0:
+            #checking front wall
+            if directions['forward']=='E':
+                if grid[y][x].E == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+            elif directions['forward']=='W':
+                if grid[y][x].W == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)
+                
+            elif directions['forward']=='N':
+                if grid[y][x].N == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)    
+            elif directions['forward']=='S':
+                if grid[y][x].S == 0:
+                    
+                    rotate_clockwise()
+                else:
+                    x, y = moveForward(x, y)  
+        else:
+            rotate_anti_clockwise()
+            x, y = moveForward(x, y)  
+    draw_maze(grid)
+    pygame.draw.rect(screen, TEMP, (y* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, x* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+    pygame.display.update()    
+    pygame.time.delay(40)
 
 running = True
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             exit()
 
-    draw_maze(grid)
+    #draw_maze(grid)
     pygame.display.update()
     clock.tick(30)
