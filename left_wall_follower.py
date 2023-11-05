@@ -1,4 +1,3 @@
-directions = {'forward':'N','left':'W','back':'S','right':'E'} #standard directions
 
 
 def rotate_clockwise():
