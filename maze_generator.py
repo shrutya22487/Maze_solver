@@ -1,4 +1,3 @@
-import cmath
 import random
 import pygame
 import time
@@ -37,7 +36,7 @@ class Button:
     def __init__(self, x, y, width, height, text, color, action = None):
         self.rect = pygame.Rect(x, y, width, height)
         font = pygame.font.Font(None, 30)
-        self.text = font.render(text, True, color)
+        self.text = font.render(text, False, color)
         self.text_rect = self.text.get_rect(center = self.rect.center )
         self.action = action
 
@@ -68,6 +67,8 @@ class Cell:
         def carve_west(self, cell):
             self.W = 1  # carving in the north direction
             cell.E = 1  # for the upper cell the opposite direction will be taken
+
+grid = [[Cell() for i in range(width)] for i in range(height)]
 
 def draw_maze(grid):
     screen.blit(maze_surface, maze_rect)
@@ -186,7 +187,7 @@ def binary_tree():
         text_1.draw()
         text_2.draw()
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(100)
 
 def left_wall_follower():
     
@@ -373,12 +374,59 @@ def left_wall_follower():
         pygame.display.update()    
         clock.tick(30)
 
-grid = [[Cell() for i in range(width)] for i in range(height)]
+def dikshtra():
+    def draw_path(path):
+        for i in path:
+            pygame.draw.rect(screen, TEMP, (i[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, i[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+            pygame.display.update()
+    def min_cell():
+        min, min_index = 1000000,(0,0)
+        for i in unvisited:
+            if unvisited[i] < min:
+                min = unvisited[i]
+                min_index = i
+        return min_index        
+
+    unvisited, visited,path = {}, [], []
+    #setting all the values in unvisited to infinity
+    for i in range(len(grid)):
+        for j in range(len(grid[0])):
+            unvisited[(i, j)] = 10000
+    unvisited[(0, 0)] = 0
+
+    while unvisited:
+        currcell = min_cell()
+        visited.append(currcell)
+
+        if currcell == (len(grid) - 1, len(grid [0]) - 1):
+            break
+
+        for i in "NEWS":
+
+            if grid[currcell[0]][currcell[1]] == 1:
+                
+                if i=='E':
+                    childCell = (currCell[0],currCell[1]+1)
+                elif i=='W':
+                    childCell=(currCell[0],currCell[1]-1)
+                elif i=='S':
+                    childCell=(currCell[0]+1,currCell[1])
+                elif i=='N':
+                    childCell=(currCell[0]-1,currCell[1])
+                if childCell in visited:
+                    continue
+                temp_dist = unvisited[currcell] + 1
+                if temp_dist < unvisited[childCell]:
+                    unvisited[childCell] = temp_dist
+                    path.append(currcell)
+
+        unvisited.pop(currcell)
+    draw_path(path)
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
 b2 = Button(1300 ,100 , 120, 50, "DFS", BLACK)
 b3 = Button(800 ,500 , 180, 50, "Left wall follower", BLACK, action = left_wall_follower)
-b4 = Button(1300 ,500 , 120, 50, "Dikshtra", BLACK)
+b4 = Button(1300 ,500 , 120, 50, "Dikshtra", BLACK, action= dikshtra)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK)
 text_2 = Button(950, 400, 300, 50, "Maze Solving Algorithms", BLACK)
