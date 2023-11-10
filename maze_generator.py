@@ -86,7 +86,6 @@ def twentyXtwenty():
     CELL_SIZE = 70
     SMALL_BLOCK_SIZE = 20    
 
-
 def draw_maze(grid):
     screen.blit(maze_surface, maze_rect)
     pygame.draw.rect(screen, RED, (0, 0, CELL_SIZE-5, CELL_SIZE-5))
@@ -106,6 +105,27 @@ def draw_maze(grid):
     pygame.draw.rect(screen, BLUE, (0, height*CELL_SIZE, width*CELL_SIZE, wall_thickness))
     pygame.draw.rect(screen, BLUE, (width * CELL_SIZE, 0, wall_thickness, CELL_SIZE*width))
 
+def check_bounds(nx, ny):
+        return ny < height and ny >= 0  and nx < width and nx >=0
+
+def binary_tree_prims():
+    dirs = ["N","W"]                               #possible directions for movement
+    DX = {W: -1, N: 0}
+    DY = {W: 0, N: -1}
+
+    for y in range(height):                     #rows
+        for x in range(width):                  #columns
+            dir = random.choice(dirs)           #pick random diresction for movement
+            nx, ny = x + DX[dir], y + DY[dir]   #new x and y
+            if check_bounds( nx, ny):
+                if dir == N:
+                    (grid[y][x]).carve_north(grid[ny][nx])
+                elif dir == W:
+                    (grid[y][x]).carve_west(grid[ny][nx])
+            draw_maze( grid )
+            pygame.display.update() 
+            clock.tick(60) 
+
 def binary_tree():
     # initialising list
     visited = []
@@ -113,10 +133,6 @@ def binary_tree():
     x= random.randint(0,width-1)
     y= random.randint(0,height-1)
     visited.append((x,y))
-
-    def check_bounds(nx, ny):
-        return ny < height and ny >= 0  and nx < width and nx >=0
-
 
     def choose_random_adjacent(x,y):
 
@@ -464,7 +480,7 @@ def dikshtra():
     pygame.time.delay(5000)
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
-b2 = Button(1300 ,100 , 120, 50, "DFS", BLACK)
+b2 = Button(1300 ,100 , 120, 50, "Binary Tree Prims", BLACK, action = binary_tree_prims)
 b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK, action = left_wall_follower)
 b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK, action= dikshtra)
 
