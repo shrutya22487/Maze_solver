@@ -5,7 +5,7 @@ from sys import exit
 import binary_tree
 
 pygame.init()
-width, height = 20, 20
+width, height = 5, 5
 SCREEN_WIDTH, SCREEN_HEIGHT = 1500, 750
 wall_thickness = 2
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -69,6 +69,23 @@ class Cell:
             cell.E = 1  # for the upper cell the opposite direction will be taken
 
 grid = [[Cell() for i in range(width)] for i in range(height)]
+
+#Grid manipulation
+def fiveXfive():
+    width,height = 5, 5
+    CELL_SIZE = 70
+    SMALL_BLOCK_SIZE = 20
+
+def tenXten():
+    width,height = 10, 10
+    CELL_SIZE = 60
+    SMALL_BLOCK_SIZE = 17
+
+def twentyXtwenty():
+    width,height = 5, 5
+    CELL_SIZE = 70
+    SMALL_BLOCK_SIZE = 20    
+
 
 def draw_maze(grid):
     screen.blit(maze_surface, maze_rect)
@@ -443,17 +460,16 @@ def dikshtra():
         fwdpath.append(revpath[cell])
         cell = revpath[cell]
 
-
     draw_path( fwdpath )
     pygame.time.delay(5000)
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
 b2 = Button(1300 ,100 , 120, 50, "DFS", BLACK)
-b3 = Button(800 ,500 , 180, 50, "Left wall follower", BLACK, action = left_wall_follower)
-b4 = Button(1300 ,500 , 120, 50, "Dikshtra", BLACK, action= dikshtra)
+b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK, action = left_wall_follower)
+b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK, action= dikshtra)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK)
-text_2 = Button(950, 400, 300, 50, "Maze Solving Algorithms", BLACK)
+text_2 = Button(950, 200, 300, 50, "Maze Solving Algorithms", BLACK)
 
 screen.fill((0, 0 , 0))
 
