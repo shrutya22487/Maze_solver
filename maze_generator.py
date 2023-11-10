@@ -99,19 +99,6 @@ def binary_tree():
 
     def check_bounds(nx, ny):
         return ny < height and ny >= 0  and nx < width and nx >=0
-    def make_borders(grid):
-        #top border:
-        for i in grid[0]:
-            i.N = 0
-        #bottom border
-        for i in grid[height - 1]:
-            i.S = 0
-        #left border
-        for i in range(height):
-            grid[i][0].W = 0
-        #right border
-        for i in range(height):
-            grid[i][width - 1].E = 0
 
 
     def choose_random_adjacent(x,y):
@@ -187,7 +174,7 @@ def binary_tree():
         text_1.draw()
         text_2.draw()
         pygame.display.update()
-        clock.tick(100)
+        clock.tick(200)
 
 def left_wall_follower():
     
@@ -375,10 +362,26 @@ def left_wall_follower():
         clock.tick(30)
 
 def dikshtra():
+
     def draw_path(path):
         for i in path:
             pygame.draw.rect(screen, TEMP, (i[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, i[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
             pygame.display.update()
+    
+    def make_borders(grid):
+        #top border:
+        for i in grid[0]:
+            i.N = 0
+        #bottom border
+        for i in grid[height - 1]:
+            i.S = 0
+        #left border
+        for i in range(height):
+            grid[i][0].W = 0
+        #right border
+        for i in range(height):
+            grid[i][width - 1].E = 0    
+
     def min_cell():
         min, min_index = 1000000,(0,0)
         for i in unvisited:
@@ -387,41 +390,62 @@ def dikshtra():
                 min_index = i
         return min_index        
 
-    unvisited, visited,path = {}, [], []
+    def set_all_to_infinity():
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                unvisited[(i, j)] = 10000
+    
+    unvisited,revpath, visited = {}, {} , []
     #setting all the values in unvisited to infinity
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            unvisited[(i, j)] = 10000
-    unvisited[(0, 0)] = 0
+    set_all_to_infinity()
+    currcell = (len(grid) - 1, len(grid[0]) - 1 )
+    unvisited[currcell] = 0
+
+    make_borders(grid)
 
     while unvisited:
         currcell = min_cell()
+
+        # pygame.draw.rect(screen, TEMP, (currcell[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, currcell[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+        # pygame.display.update()
         visited.append(currcell)
 
-        if currcell == (len(grid) - 1, len(grid [0]) - 1):
+        if currcell == (0, 0):
             break
 
         for i in "NEWS":
+            childCell = 0
+            if i == "E" and grid[currcell[0]][currcell[1]].E == 1:
+                childCell = (currcell[0],currcell[1]+1)
 
-            if grid[currcell[0]][currcell[1]] == 1:
-                
-                if i=='E':
-                    childCell = (currCell[0],currCell[1]+1)
-                elif i=='W':
-                    childCell=(currCell[0],currCell[1]-1)
-                elif i=='S':
-                    childCell=(currCell[0]+1,currCell[1])
-                elif i=='N':
-                    childCell=(currCell[0]-1,currCell[1])
-                if childCell in visited:
-                    continue
-                temp_dist = unvisited[currcell] + 1
-                if temp_dist < unvisited[childCell]:
-                    unvisited[childCell] = temp_dist
-                    path.append(currcell)
+            elif i == "W" and grid[currcell[0]][currcell[1]].W == 1:
+                childCell=(currcell[0],currcell[1]-1)
+
+            elif i == "S" and grid[currcell[0]][currcell[1]].S == 1:
+                childCell=(currcell[0]+1,currcell[1])
+
+            elif i == "N" and grid[currcell[0]][currcell[1]].N == 1:
+                childCell=(currcell[0]-1,currcell[1])
+
+            if childCell != 0 and childCell in visited:
+                continue
+
+            temp_dist = unvisited[currcell] + 1
+
+            if childCell != 0 and temp_dist < unvisited[childCell]:
+                unvisited[childCell] = temp_dist
+                revpath[childCell] = currcell
 
         unvisited.pop(currcell)
-    draw_path(path)
+    fwdpath = []
+    cell = list(revpath.keys())[-1]
+    while cell != (len(grid) - 1, len(grid[0]) - 1):
+        fwdpath.append(revpath[cell])
+        cell = revpath[cell]
+
+
+    draw_path( fwdpath )
+    pygame.time.delay(5000)
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
 b2 = Button(1300 ,100 , 120, 50, "DFS", BLACK)
