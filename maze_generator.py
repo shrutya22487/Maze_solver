@@ -394,6 +394,51 @@ def left_wall_follower():
         pygame.display.update()    
         clock.tick(30)
 
+def prims_algorithm():
+    frontier = []  # List to store frontier
+    start_x, start_y = random.randint(0, width - 1), random.randint(0, height - 1)  #random cell to start
+    visited = set((start_x, start_y))  # Set to store visited cells
+
+    # Function to add neighboring walls to the list
+    def add_frontier(x, y):
+        if check_bounds(x - 1, y) and (x - 1, y) not in visited:
+            frontier.append(((x, y), 'N', (x - 1, y)))
+        if check_bounds(x + 1, y) and (x + 1, y) not in visited:
+            frontier.append(((x, y), 'S', (x + 1, y)))
+        if check_bounds(x, y - 1) and (x, y - 1) not in visited:
+            frontier.append(((x, y), 'W', (x, y - 1)))
+        if check_bounds(x, y + 1) and (x, y + 1) not in visited:
+            frontier.append(((x, y), 'E', (x, y + 1)))
+
+    add_frontier(start_x, start_y)         # add frontier
+
+    while frontier:       # selecting random frotier
+        frontier_index = random.randint(0, len(frontier) - 1)
+        current_cell, direction, neighbor = frontier.pop(frontier_index)     # choose a rando frontier
+
+        current_x, current_y = current_cell
+        neighbor_x, neighbor_y = neighbor
+
+        if neighbor not in visited: # selecting random frotier of new frontier
+            visited.add(neighbor)
+
+            # Carve path from chosen cell and frontier
+            if direction == 'N':
+                grid[current_y][current_x].carve_north(grid[neighbor_y][neighbor_x])
+            elif direction == 'S':
+                grid[current_y][current_x].carve_south(grid[neighbor_y][neighbor_x])
+            elif direction == 'W':
+                grid[current_y][current_x].carve_west(grid[neighbor_y][neighbor_x])
+            elif direction == 'E':
+                grid[current_y][current_x].carve_east(grid[neighbor_y][neighbor_x])
+
+            # Add neighboring walls of the visited cell
+            add_frontier(neighbor_x, neighbor_y)         #mark neighbour of frontier as frontier
+
+        draw_maze(grid)
+        pygame.display.update()
+        clock.tick(60)
+
 def dikshtra():
 
     def draw_path(path):
