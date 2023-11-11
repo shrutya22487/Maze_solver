@@ -2,10 +2,10 @@ import random
 import pygame
 import time
 from sys import exit
-import binary_tree
+# import binary_tree
 
 pygame.init()
-width, height = 5, 5
+width, height = 20, 20
 SCREEN_WIDTH, SCREEN_HEIGHT = 1500, 750
 wall_thickness = 2
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -108,23 +108,6 @@ def draw_maze(grid):
 def check_bounds(nx, ny):
         return ny < height and ny >= 0  and nx < width and nx >=0
 
-def binary_tree_prims():
-    dirs = ["N","W"]                               #possible directions for movement
-    DX = {W: -1, N: 0}
-    DY = {W: 0, N: -1}
-
-    for y in range(height):                     #rows
-        for x in range(width):                  #columns
-            dir = random.choice(dirs)           #pick random diresction for movement
-            nx, ny = x + DX[dir], y + DY[dir]   #new x and y
-            if check_bounds( nx, ny):
-                if dir == N:
-                    (grid[y][x]).carve_north(grid[ny][nx])
-                elif dir == W:
-                    (grid[y][x]).carve_west(grid[ny][nx])
-            draw_maze( grid )
-            pygame.display.update() 
-            clock.tick(60) 
 
 def binary_tree():
     # initialising list
@@ -525,7 +508,7 @@ def dikshtra():
     pygame.time.delay(5000)
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
-b2 = Button(1300 ,100 , 120, 50, "Binary Tree Prims", BLACK, action = binary_tree_prims)
+b2 = Button(1300 ,100 , 120, 50, "Prims algo", BLACK, action = prims_algorithm)
 b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK, action = left_wall_follower)
 b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK, action= dikshtra)
 
