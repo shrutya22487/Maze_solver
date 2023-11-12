@@ -7,7 +7,7 @@ from sys import exit
 pygame.init()
 width, height = 20, 20
 SCREEN_WIDTH, SCREEN_HEIGHT = 1500, 750
-wall_thickness = 2
+wall_thickness = 3
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Maze Solver")
 clock = pygame.time.Clock()
@@ -88,8 +88,8 @@ def twentyXtwenty():
 
 def draw_maze(grid):
     screen.blit(maze_surface, maze_rect)
-    pygame.draw.rect(screen, RED, (0, 0, CELL_SIZE-5, CELL_SIZE-5))
-    pygame.draw.rect(screen, GREEN, ((width-1)* CELL_SIZE, (height-1)* CELL_SIZE, CELL_SIZE-5, CELL_SIZE-5))
+    pygame.draw.rect(screen, RED, (0, 0, CELL_SIZE, CELL_SIZE))
+    pygame.draw.rect(screen, GREEN, ((width-1)* CELL_SIZE, (height-1)* CELL_SIZE, CELL_SIZE, CELL_SIZE))
     for y in range(height):
         for x in range(width):
             cell = grid[y][x]
@@ -426,7 +426,8 @@ def dikshtra():
 
     def draw_path(path):
         for i in path:
-            pygame.draw.rect(screen, TEMP, (i[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, i[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+            pygame.draw.rect(screen, TEMP, (i[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, i[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+            pygame.time.delay(100)
             pygame.display.update()
     
     def make_borders(grid):
@@ -462,7 +463,7 @@ def dikshtra():
     currcell = (len(grid) - 1, len(grid[0]) - 1 )
     unvisited[currcell] = 0
 
-    make_borders(grid)
+    # make_borders(grid)
 
     while unvisited:
         currcell = min_cell()
@@ -477,16 +478,16 @@ def dikshtra():
         for i in "NEWS":
             childCell = 0
             if i == "E" and grid[currcell[0]][currcell[1]].E == 1:
-                childCell = (currcell[0],currcell[1]+1)
+                childCell = (currcell[0] + 1,currcell[1])
 
             elif i == "W" and grid[currcell[0]][currcell[1]].W == 1:
-                childCell=(currcell[0],currcell[1]-1)
+                childCell=(currcell[0] - 1,currcell[1])
 
             elif i == "S" and grid[currcell[0]][currcell[1]].S == 1:
-                childCell=(currcell[0]+1,currcell[1])
+                childCell=(currcell[0] ,currcell[1] + 1)
 
             elif i == "N" and grid[currcell[0]][currcell[1]].N == 1:
-                childCell=(currcell[0]-1,currcell[1])
+                childCell=(currcell[0],currcell[1] - 1)
 
             if childCell != 0 and childCell in visited:
                 continue
@@ -498,13 +499,14 @@ def dikshtra():
                 revpath[childCell] = currcell
 
         unvisited.pop(currcell)
-    fwdpath = []
-    cell = list(revpath.keys())[-1]
+    fwdpath = {}
+    cell = (0,0)
     while cell != (len(grid) - 1, len(grid[0]) - 1):
-        fwdpath.append(revpath[cell])
+        fwdpath[revpath[cell]] = cell
         cell = revpath[cell]
 
     draw_path( fwdpath )
+    print(revpath)
     pygame.time.delay(5000)
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
