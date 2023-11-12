@@ -15,10 +15,10 @@ directions = {'forward':'N','left':'W','back':'S','right':'E'} #standard directi
 
 
 # Colours
-CELL_SIZE = 35
+CELL_SIZE = 37
 SMALL_BLOCK_SIZE = 10
 BLACK = WALL_COLOR = (0, 0, 0)  # Black
-WHITE = PATH_COLOR = (0, 0, 0)  # White
+WHITE = PATH_COLOR = (255, 255, 255)  # White
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
@@ -33,15 +33,17 @@ control_surface.fill((255, 255, 255))
 control_rect = control_surface.get_rect(topleft = (750, 0))
 
 class Button:
-    def __init__(self, x, y, width, height, text, color, action = None):
+    def __init__(self, x, y, width, height, text, color, Border_thickness,Border_color, action = None):
         self.rect = pygame.Rect(x, y, width, height)
         font = pygame.font.Font(None, 30)
         self.text = font.render(text, False, color)
         self.text_rect = self.text.get_rect(center = self.rect.center )
         self.action = action
+        self.border_thickness = Border_thickness
+        self.border_color = Border_color
 
     def draw(self):
-        pygame.draw.rect(screen, BLUE ,self.rect, 4, 10) 
+        pygame.draw.rect(screen, self.border_color ,self.rect, self.border_thickness, 10) 
         screen.blit(self.text, self.text_rect)
 
 class Cell:
@@ -72,19 +74,51 @@ grid = [[Cell() for i in range(width)] for i in range(height)]
 
 #Grid manipulation
 def fiveXfive():
-    width,height = 5, 5
-    CELL_SIZE = 70
-    SMALL_BLOCK_SIZE = 20
+    global clock_tick
+    clock_tick = 30
+    global wall_thickness
+    wall_thickness = 8
+    global width 
+    width = 5
+    global height
+    height = 5
+    global CELL_SIZE
+    CELL_SIZE = 140
+    global SMALL_BLOCK_SIZE
+    SMALL_BLOCK_SIZE = 60
 
 def tenXten():
-    width,height = 10, 10
-    CELL_SIZE = 60
-    SMALL_BLOCK_SIZE = 17
+    global clock_tick
+    clock_tick = 60
+    global wall_thickness
+    wall_thickness = 6
+    global width 
+    width = 10
+    global height
+    height = 10
+    global CELL_SIZE
+    CELL_SIZE = 70
+    global SMALL_BLOCK_SIZE
+    SMALL_BLOCK_SIZE = 30
 
 def twentyXtwenty():
-    width,height = 5, 5
-    CELL_SIZE = 70
-    SMALL_BLOCK_SIZE = 20    
+    global clock_tick
+    clock_tick = 120
+    global wall_thickness
+    wall_thickness = 4
+    global width 
+    width = 20
+    global height
+    height = 20
+    global CELL_SIZE
+    CELL_SIZE = 37
+    global SMALL_BLOCK_SIZE
+    SMALL_BLOCK_SIZE = 10    
+
+def reset():
+    global grid
+    grid = [[Cell() for i in range(width)] for i in range(height)]
+
 
 def draw_maze(grid):
     screen.blit(maze_surface, maze_rect)
@@ -182,13 +216,7 @@ def binary_tree():
         screen.blit(control_surface, control_rect)
         screen.blit(maze_surface, maze_rect)
         draw_maze(grid)
-
-        b1.draw()
-        b2.draw()
-        b3.draw()
-        b4.draw()
-        text_1.draw()
-        text_2.draw()
+        draw_nodes()
         pygame.display.update()
         clock.tick(200)
 
@@ -367,12 +395,7 @@ def left_wall_follower():
         pygame.draw.rect(screen, TEMP, (y* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, x* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
         draw_path(x, y)
         # screen.blit(control_surface, control_rect)
-        b1.draw()
-        b2.draw()
-        b3.draw()
-        b4.draw()
-        text_1.draw()
-        text_2.draw()
+        draw_nodes()
 
         pygame.display.update()    
         clock.tick(30)
@@ -509,13 +532,31 @@ def dikshtra():
     print(revpath)
     pygame.time.delay(5000)
 
-b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, action = binary_tree)
-b2 = Button(1300 ,100 , 120, 50, "Prims algo", BLACK, action = prims_algorithm)
-b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK, action = left_wall_follower)
-b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK, action= dikshtra)
+b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, 4,BLUE,  action = binary_tree)
+b2 = Button(1300 ,100 , 120, 50, "Prims algo", BLACK,4, BLUE, action = prims_algorithm)
+b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK,4, BLUE, action = left_wall_follower)
+b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK,4, BLUE, action= dikshtra)
+b5 = Button(800, 500, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
+b6 = Button(1050, 500, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
+b7 = Button(1300, 500, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
+b8 = Button(1050, 700, 120, 50, "RESET", BLACK,6, BLUE, action= reset)
 
-text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK)
-text_2 = Button(950, 200, 300, 50, "Maze Solving Algorithms", BLACK)
+text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
+text_2 = Button(950, 200, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
+text_3 = Button(950, 390, 300, 50, "Controls", BLACK, 1, WHITE)
+
+def draw_nodes():
+    b1.draw()
+    b2.draw()
+    b3.draw()
+    b4.draw()
+    b5.draw()
+    b6.draw()
+    b7.draw()
+    b8.draw()
+    text_1.draw()
+    text_2.draw()
+    text_3.draw()
 
 screen.fill((0, 0 , 0))
 
@@ -535,17 +576,20 @@ if __name__=='__main__':
                     elif b3.rect.collidepoint(event.pos):
                         b3.action()
                     elif b4.rect.collidepoint(event.pos):
-                        b4.action()        
-
+                        b4.action() 
+                    elif b5.rect.collidepoint(event.pos):
+                        b5.action()
+                    elif b6.rect.collidepoint(event.pos):
+                        b6.action()
+                    elif b7.rect.collidepoint(event.pos):
+                        b7.action() 
+                    elif b8.rect.collidepoint(event.pos):
+                        b8.action() 
+                           
         screen.blit(control_surface, control_rect)
         screen.blit(maze_surface, maze_rect)
         draw_maze(grid)
-
-        b1.draw()
-        b2.draw()
-        b3.draw()
-        b4.draw()
-        text_1.draw()
-        text_2.draw()
+        draw_nodes()
+        
         pygame.display.update()
         clock.tick(60)
