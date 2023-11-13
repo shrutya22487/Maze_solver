@@ -531,6 +531,63 @@ def dikshtra():
     draw_path( fwdpath )
     print(revpath)
     pygame.time.delay(5000)
+def dfs1():
+    def get_unvisited_neighbors(x, y):
+        neighbours =[]
+        if grid[y][x].N ==1 and (x-1,y) not in visited:
+            neighbours.append((x-1,y))
+            # visited.add((x-1,y))
+        if grid[y][x].E ==1 and (x,y+1) not in visited:
+            neighbours.append((x,y+1))
+            # visited.add((x, y+1))
+        if grid[y][x].S ==1 and (x+1,y) not in visited:
+            neighbours.append((x+1,y))
+            # visited.add((x + 1, y))
+        if grid[y][x].W ==1 and (x,y-1) not in visited:
+            neighbours.append((x,y-1))
+            # visited.add((x, y - 1))
+
+        return neighbours
+
+    stack = [(0, 0)]  # Starting position
+    visited = set()
+
+    while stack:
+        x, y = stack[-1]
+        visited.add((x,y))
+
+        if (x, y) == (width - 1, height - 1):  # Reached the exit
+            print("DFS Path Found!")
+            draw_solution_path((x, y), visited)
+            pygame.time.delay(5000)
+            return
+
+        temp = get_unvisited_neighbors(x, y)
+        if len(temp)==0:
+            stack.remove((x,y))
+        else:
+            stack.extend(temp)
+            #print(stack)
+
+        draw_maze(grid)
+        draw_solution_path((x, y), visited)
+        draw_nodes()
+
+        pygame.display.update()
+        clock.tick(20)
+
+    print("DFS: No Path Found!")
+
+
+
+def draw_solution_path(cell, visited):
+    for x, y in visited:
+        pygame.draw.rect(screen, TEMP, (y * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                        x * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+                                        SMALL_BLOCK_SIZE))
+    pygame.draw.rect(screen, TEMP, (cell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                    cell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+                                    SMALL_BLOCK_SIZE))
 
 b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, 4,BLUE,  action = binary_tree)
 b2 = Button(1300 ,100 , 120, 50, "Prims algo", BLACK,4, BLUE, action = prims_algorithm)
@@ -540,6 +597,7 @@ b5 = Button(800, 500, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
 b6 = Button(1050, 500, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
 b7 = Button(1300, 500, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
 b8 = Button(1050, 700, 120, 50, "RESET", BLACK,6, BLUE, action= reset)
+b9 = Button(1050, 300, 120, 50, "Dfs", BLACK, 4, BLUE, action=dfs1)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
 text_2 = Button(950, 200, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
@@ -554,6 +612,7 @@ def draw_nodes():
     b6.draw()
     b7.draw()
     b8.draw()
+    b9.draw()
     text_1.draw()
     text_2.draw()
     text_3.draw()
@@ -585,6 +644,8 @@ if __name__=='__main__':
                         b7.action() 
                     elif b8.rect.collidepoint(event.pos):
                         b8.action() 
+                    elif b9.rect.collidepoint(event.pos):
+                        b9.action() 
                            
         screen.blit(control_surface, control_rect)
         screen.blit(maze_surface, maze_rect)
