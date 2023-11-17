@@ -256,15 +256,14 @@ def left_wall_follower():
         if directions['left'] == "N":
             pygame.draw.rect(screen, GREEN , (cell_y, cell_x,CELL_SIZE,wall_thickness))
         if directions['left'] == "S":
-            pygame.draw.rect(screen, GREEN , (cell_y, cell_x,CELL_SIZE,wall_thickness))
+            pygame.draw.rect(screen, GREEN , (cell_y, cell_x + CELL_SIZE,CELL_SIZE,wall_thickness))
         if directions['left'] == "E":
-            pygame.draw.rect(screen, GREEN , (cell_y, cell_x,wall_thickness,CELL_SIZE))
+            pygame.draw.rect(screen, GREEN , (cell_y + CELL_SIZE, cell_x,wall_thickness,CELL_SIZE))
         if directions['left'] == "W":
-            pygame.draw.rect(screen, GREEN , (cell_y, cell_x,wall_thickness,CELL_SIZE))
+            pygame.draw.rect(screen, GREEN , (cell_y , cell_x ,wall_thickness,CELL_SIZE))
 
-
-    x, y = 0, 0
-    while not( x == width - 1 and y == height - 1 ) :
+    x, y = width - 1, height - 1
+    while not( x == 0 and y == 0 ) :
         #checking left wall
         if directions['left']=='E':
             if grid[y][x].E == 0:
@@ -399,7 +398,7 @@ def left_wall_follower():
         draw_nodes()
 
         pygame.display.update()    
-        clock.tick(30)
+        clock.tick(1)
 
 def prims_algorithm():
     frontier = []  # List to store frontier
