@@ -399,11 +399,9 @@ def left_wall_follower():
         draw_maze(grid)
         pygame.draw.rect(screen, PINK, (y* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, x* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
         draw_path(x, y)
-        # screen.blit(control_surface, control_rect)
         draw_nodes()
-
         pygame.display.update()    
-        clock.tick(1)
+        clock.tick(30)
 
 def prims_algorithm():
     frontier = []  # List to store frontier
@@ -454,7 +452,7 @@ def dikshtra():
 
     def draw_path(path):
         for i in path:
-            pygame.draw.rect(screen, PINK, (i[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, i[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+            pygame.draw.rect(screen, GREEN, (i[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, i[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
             pygame.time.delay(100)
             pygame.display.update()
 
@@ -474,43 +472,40 @@ def dikshtra():
     unvisited,revpath, visited = {}, {} , []
     #setting all the values in unvisited to infinity
     set_all_to_infinity()
-    currcell = (len(grid) - 1, len(grid[0]) - 1 )
+    currcell = (width - 1, height - 1 )
     unvisited[currcell] = 0
-
-    # make_borders(grid)
 
     while unvisited:
         currcell = min_cell()
-
+        pygame.draw.rect(screen, PINK , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                    currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+                                    SMALL_BLOCK_SIZE))
         # pygame.draw.rect(screen, PINK, (currcell[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, currcell[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
-        # pygame.display.update()
-        visited.append(currcell)
 
         if currcell == (0, 0):
             break
         #make random here
         for i in "NEWS":
+
             childCell = 0
-            if i == "E" and grid[currcell[0]][currcell[1]].E == 1:
-                childCell = (currcell[0] + 1,currcell[1])
+            if i == "E" and grid[currcell[1]][currcell[0]].E == 1:
+                childCell = (currcell[0],currcell[1] + 1)
 
-            elif i == "W" and grid[currcell[0]][currcell[1]].W == 1:
-                childCell=(currcell[0] - 1,currcell[1])
-
-            elif i == "S" and grid[currcell[0]][currcell[1]].S == 1:
-                childCell=(currcell[0] ,currcell[1] + 1)
-
-            elif i == "N" and grid[currcell[0]][currcell[1]].N == 1:
+            elif i == "W" and grid[currcell[1]][currcell[0]].W == 1:
                 childCell=(currcell[0],currcell[1] - 1)
+
+            elif i == "S" and grid[currcell[1]][currcell[0]].S == 1:
+                childCell=(currcell[0]+ 1 ,currcell[1])
+
+            elif i == "N" and grid[currcell[1]][currcell[0]].N == 1:
+                childCell=(currcell[0] - 1,currcell[1] )
 
             if childCell != 0 and childCell in visited:
                 continue
 
-            pygame.draw.rect(screen, PINK , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
-                                    currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
-                                    SMALL_BLOCK_SIZE))
-            pygame.draw.rect(screen, GRAY , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
-                                    currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+            if childCell != 0 :
+                pygame.draw.rect(screen, GRAY , ( childCell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                    childCell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
                                     SMALL_BLOCK_SIZE))
             
             temp_dist = unvisited[currcell] + 1
@@ -520,19 +515,23 @@ def dikshtra():
             if childCell != 0 and temp_dist < unvisited[childCell]:
                 unvisited[childCell] = temp_dist
                 revpath[childCell] = currcell
-
+        pygame.draw.rect(screen, GRAY , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                    currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+                                    SMALL_BLOCK_SIZE))
+        pygame.display.update()
+        visited.append(currcell)
         unvisited.pop(currcell)
-        clock.tick(20)
+        clock.tick(30)
 
     fwdpath = {}
     cell = (0,0)
-    while cell != (len(grid) - 1, len(grid[0]) - 1):
+    while cell != ( width - 1, height - 1):
         fwdpath[revpath[cell]] = cell
         cell = revpath[cell]
 
-    # draw_path( fwdpath )
+    draw_path( fwdpath ) 
     # print(revpath)
-    pygame.time.delay(5000)
+    pygame.time.delay(3000)
 
 def dfs1():
     def get_unvisited_neighbors(x, y):
