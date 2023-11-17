@@ -226,27 +226,32 @@ def left_wall_follower():
     def rotate_clockwise():
         global directions
         keys = list(directions.keys())
-        v = list(directions.values())
-        v_rotated=[v[-1]]+v[:-1]
-        directions = dict(zip(keys,v_rotated))
+        values = list(directions.values())
+        values_right = [values[-1]]
+        values_left = values[:-1]
+        values_rotated = values_right + values_left
+        directions = dict(zip(keys,values_rotated))
 
     def rotate_anti_clockwise():
         global directions
         keys = list(directions.keys())
-        v = list(directions.values())
-        v_rotated=v[1:]+[v[0]]
-        directions = dict(zip(keys,v_rotated))
+        values = list(directions.values())
+        values_right= values[1:]
+        values_left = [values[0]]
+        values_rotated = values_right + values_left
+        directions = dict(zip(keys,values_rotated))
 
-    def moveForward(x, y):
+    def step_forward(x, y):
         global directions
-        if directions['forward']=='E':
-            return x, y + 1
-        if directions['forward']=='W':
-            return x,y-1
-        if directions['forward']=='N':
-            return x - 1, y
-        if directions['forward']=='S':
-            return x + 1 , y
+        match directions['forward']:
+            case 'E':
+                return x, y + 1
+            case 'W':
+                return x,y-1
+            case 'N':
+                return x - 1, y
+            case 'S':
+                return x + 1 , y
 
     def draw_path(x, y):
         cell_x = x * CELL_SIZE
@@ -272,29 +277,29 @@ def left_wall_follower():
                     if grid[y][x].E == 0:
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                 elif directions['forward']=='W':
                     if grid[y][x].W == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                     
                 elif directions['forward']=='N':
                     if grid[y][x].N == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)    
+                        x, y = step_forward(x, y)    
                 elif directions['forward']=='S':
                     if grid[y][x].S == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)  
+                        x, y = step_forward(x, y)  
             else:
                 rotate_anti_clockwise()
-                x, y = moveForward(x, y)               
+                x, y = step_forward(x, y)               
         
         elif directions['left']=='N':
             if grid[y][x].N == 0:
@@ -304,29 +309,29 @@ def left_wall_follower():
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                 elif directions['forward']=='W':
                     if grid[y][x].W == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                     
                 elif directions['forward']=='N':
                     if grid[y][x].N == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)    
+                        x, y = step_forward(x, y)    
                 elif directions['forward']=='S':
                     if grid[y][x].S == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)  
+                        x, y = step_forward(x, y)  
             else:
                 rotate_anti_clockwise()
-                x, y = moveForward(x, y)  
+                x, y = step_forward(x, y)  
             
         elif directions['left']=='W':
             if grid[y][x].W == 0:
@@ -336,29 +341,29 @@ def left_wall_follower():
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                 elif directions['forward']=='W':
                     if grid[y][x].W == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                     
                 elif directions['forward']=='N':
                     if grid[y][x].N == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)    
+                        x, y = step_forward(x, y)    
                 elif directions['forward']=='S':
                     if grid[y][x].S == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)  
+                        x, y = step_forward(x, y)  
             else:
                 rotate_anti_clockwise()
-                x, y = moveForward(x, y)  
+                x, y = step_forward(x, y)  
 
         elif directions['left']=='S':
             if grid[y][x].S == 0:
@@ -368,29 +373,29 @@ def left_wall_follower():
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                 elif directions['forward']=='W':
                     if grid[y][x].W == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)
+                        x, y = step_forward(x, y)
                     
                 elif directions['forward']=='N':
                     if grid[y][x].N == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)    
+                        x, y = step_forward(x, y)    
                 elif directions['forward']=='S':
                     if grid[y][x].S == 0:
                         
                         rotate_clockwise()
                     else:
-                        x, y = moveForward(x, y)  
+                        x, y = step_forward(x, y)  
             else:
                 rotate_anti_clockwise()
-                x, y = moveForward(x, y)  
+                x, y = step_forward(x, y)  
         draw_maze(grid)
         pygame.draw.rect(screen, PINK, (y* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, x* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
         draw_path(x, y)
