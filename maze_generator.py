@@ -54,7 +54,6 @@ class Cell:
             self.E = 0
             self.S = 0
             self.visited = False
-
         def carve_north(self, cell):
             self.N = 1  # carving in the north direction
             cell.S = 1  # for the upper cell the opposite direction will be taken
@@ -70,6 +69,27 @@ class Cell:
         def carve_west(self, cell):
             self.W = 1  # carving in the north direction
             cell.E = 1  # for the upper cell the opposite direction will be taken
+        
+        def check_dead_end(self):
+            return (self.N + self.W +self.S +self.E ) == 1
+        
+        def fill_cell(self , x, y):
+            if self.N == 1:
+                self.N = 0
+                if check_bounds(x - 1, y):
+                    grid[y][x - 1].S = 0
+            elif self.E == 1:
+                self.E = 0
+                if check_bounds(x , y + 1):
+                    grid[y+1][x].W = 0
+            elif self.W == 1:
+                self.W = 0
+                if check_bounds(x, y - 1):
+                    grid[y - 1][x].E = 0
+            elif self.S == 1:
+                self.S = 0
+                if check_bounds(x + 1, y):
+                    grid[y][x + 1].N = 0                   
 
 grid = [[Cell() for i in range(width)] for i in range(height)]
 
@@ -120,7 +140,6 @@ def reset():
     global grid
     grid = [[Cell() for i in range(width)] for i in range(height)]
 
-
 def draw_maze(grid):
     screen.blit(maze_surface, maze_rect)
     pygame.draw.rect(screen, RED, (0, 0, CELL_SIZE, CELL_SIZE))
@@ -134,15 +153,18 @@ def draw_maze(grid):
 
             if cell.N == 0:
                 pygame.draw.rect(screen, BLUE, (cell_y, cell_x, CELL_SIZE, wall_thickness))
+            # if cell.S == 0:
+            #     pygame.draw.rect(screen, BLUE, (cell_y, cell_x + CELL_SIZE, CELL_SIZE, wall_thickness))
             if cell.W == 0:
                 pygame.draw.rect(screen, BLUE, (cell_y, cell_x, wall_thickness, CELL_SIZE))
+            # if cell.E == 0:
+            #     pygame.draw.rect(screen, BLUE, (cell_y + CELL_SIZE, cell_x, wall_thickness, CELL_SIZE))
 
     pygame.draw.rect(screen, BLUE, (0, height*CELL_SIZE, width*CELL_SIZE, wall_thickness))
     pygame.draw.rect(screen, BLUE, (width * CELL_SIZE, 0, wall_thickness, CELL_SIZE*width))
 
 def check_bounds(nx, ny):
         return ny < height and ny >= 0  and nx < width and nx >=0
-
 
 def binary_tree():
     # initialising list
@@ -582,6 +604,41 @@ def dfs1():
 
     print("DFS: No Path Found!")
 
+def dead_end_filler():
+    def step(x, y):
+        if grid[y][x].N == 1 and (x - 1, y) not in visited:
+            return (x - 1, y)
+        if grid[y][x].S == 1 and (x + 1, y) not in visited:
+            return (x + 1, y)
+        if grid[y][x].E == 1 and (x , y + 1) not in visited:
+            return (x , y + 1)
+        if grid[y][x].W == 1 and (x , y - 1) not in visited:
+            return (x , y - 1)
+        
+    remaining_cells = True
+    while remaining_cells:
+
+        remaining_cells = False
+        for x in range(width):
+            for y in range(height):
+                if grid[y][x].check_dead_end():
+                    if (x, y) != (0, 0) and (x, y) != (width - 1, height - 1):
+                        grid[y][x].fill_cell(x, y)
+                        remaining_cells = True
+                draw_maze(grid)
+                pygame.display.update()
+        clock.tick(60)  
+
+    currcell = (0, 0)
+    visited = []
+    while currcell != (width - 1, height - 1):
+        pygame.draw.rect(screen, GREEN, (currcell[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, currcell[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+        pygame.display.update()
+        visited.append(currcell)
+        currcell = step(currcell[0], currcell[1])
+        clock.tick(30)
+    pygame.time.delay(3000)
+
 def draw_solution_path(cell, visited):
     for x, y in visited:
         pygame.draw.rect(screen, PINK, (y * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
@@ -595,15 +652,17 @@ b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, 4,BLUE,  action = binary_t
 b2 = Button(1300 ,100 , 120, 50, "Prims algo", BLACK,4, BLUE, action = prims_algorithm)
 b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK,4, BLUE, action = left_wall_follower)
 b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK,4, BLUE, action= dikshtra)
-b5 = Button(800, 500, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
-b6 = Button(1050, 500, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
-b7 = Button(1300, 500, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
-b8 = Button(1050, 700, 120, 50, "RESET", BLACK,6, BLUE, action= reset)
-b9 = Button(1050, 300, 120, 50, "Dfs", BLACK, 4, BLUE, action=dfs1)
+b10 = Button(1300 ,400 , 150, 50, "Dead end filler", BLACK,4, BLUE, action= dead_end_filler)
+
+b5 = Button(800, 550, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
+b6 = Button(1050, 550, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
+b7 = Button(1300, 550, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
+b8 = Button(1050, 700, 120, 50, "RESET", BLACK,6, BLUE, action = reset)
+b9 = Button(1050, 300, 120, 50, "Dfs", BLACK, 4, BLUE, action = dfs1)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
 text_2 = Button(950, 200, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
-text_3 = Button(950, 390, 300, 50, "Controls", BLACK, 1, WHITE)
+text_3 = Button(950, 450, 300, 50, "Controls", BLACK, 1, WHITE)
 
 def draw_nodes():
     b1.draw()
@@ -615,6 +674,7 @@ def draw_nodes():
     b7.draw()
     b8.draw()
     b9.draw()
+    b10.draw()
     text_1.draw()
     text_2.draw()
     text_3.draw()
@@ -648,6 +708,8 @@ if __name__=='__main__':
                         b8.action() 
                     elif b9.rect.collidepoint(event.pos):
                         b9.action() 
+                    elif b10.rect.collidepoint(event.pos):
+                        b10.action()     
                            
         screen.blit(control_surface, control_rect)
         screen.blit(maze_surface, maze_rect)
