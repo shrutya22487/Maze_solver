@@ -6,6 +6,7 @@ from sys import exit
 
 pygame.init()
 width, height = 20, 20
+FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 1500, 750
 wall_thickness = 3
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -92,6 +93,20 @@ class Cell:
                     grid[y][x + 1].N = 0                   
 
 grid = [[Cell() for i in range(width)] for i in range(height)]
+
+def fps60():
+    global FPS
+    FPS = 60
+def fps20():
+    global FPS
+    FPS = 20
+def fps1():
+    global FPS
+    FPS = 1
+def fps40():
+    global FPS
+    FPS = 40    
+
 
 #Grid manipulation
 def fiveXfive():
@@ -241,7 +256,7 @@ def binary_tree():
         draw_maze(grid)
         draw_nodes()
         pygame.display.update()
-        clock.tick(200)
+        clock.tick(FPS)
 
 def left_wall_follower():
     
@@ -423,7 +438,7 @@ def left_wall_follower():
         draw_path(x, y)
         draw_nodes()
         pygame.display.update()    
-        clock.tick(30)
+        clock.tick(FPS)
 
 def prims_algorithm():
     frontier = []  # List to store frontier
@@ -468,7 +483,7 @@ def prims_algorithm():
 
         draw_maze(grid)
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(FPS)
 
 def dikshtra():
 
@@ -543,7 +558,7 @@ def dikshtra():
         pygame.display.update()
         visited.append(currcell)
         unvisited.pop(currcell)
-        clock.tick(30)
+        clock.tick(FPS)
 
     fwdpath = {}
     cell = (0,0)
@@ -600,7 +615,7 @@ def dfs1():
         draw_nodes()
 
         pygame.display.update()
-        clock.tick(20)
+        clock.tick(FPS)
 
     print("DFS: No Path Found!")
 
@@ -627,7 +642,7 @@ def dead_end_filler():
                         remaining_cells = True
                 draw_maze(grid)
                 pygame.display.update()
-        clock.tick(60)  
+        clock.tick(FPS)  
 
     currcell = (0, 0)
     visited = []
@@ -636,7 +651,7 @@ def dead_end_filler():
         pygame.display.update()
         visited.append(currcell)
         currcell = step(currcell[0], currcell[1])
-        clock.tick(30)
+        clock.tick(FPS)
     pygame.time.delay(3000)
 
 def draw_solution_path(cell, visited):
@@ -648,21 +663,27 @@ def draw_solution_path(cell, visited):
                                     cell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
                                     SMALL_BLOCK_SIZE))
 
-b1 = Button(800 ,100 , 120, 50, "Binary Tree", BLACK, 4,BLUE,  action = binary_tree)
-b2 = Button(1300 ,100 , 120, 50, "Prims algo", BLACK,4, BLUE, action = prims_algorithm)
-b3 = Button(800 ,300 , 180, 50, "Left wall follower", BLACK,4, BLUE, action = left_wall_follower)
-b4 = Button(1300 ,300 , 120, 50, "Dikshtra", BLACK,4, BLUE, action= dikshtra)
-b10 = Button(1300 ,400 , 150, 50, "Dead end filler", BLACK,4, BLUE, action= dead_end_filler)
+b1 = Button(800 ,70 , 120, 50, "Binary Tree", BLACK, 4,BLUE,  action = binary_tree)
+b2 = Button(1300 ,70 , 120, 50, "Prims algo", BLACK,4, BLUE, action = prims_algorithm)
+b3 = Button(800 ,250 , 180, 50, "Left wall follower", BLACK,4, BLUE, action = left_wall_follower)
+b4 = Button(1300 ,250 , 120, 50, "Dikshtra", BLACK,4, BLUE, action= dikshtra)
+b10 = Button(1030 ,320 , 150, 50, "Dead end filler", BLACK,4, BLUE, action= dead_end_filler)
 
-b5 = Button(800, 550, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
-b6 = Button(1050, 550, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
-b7 = Button(1300, 550, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
+b5 = Button(800, 450, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
+b6 = Button(1050, 450, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
+b7 = Button(1300, 450, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
 b8 = Button(1050, 700, 120, 50, "RESET", BLACK,6, BLUE, action = reset)
-b9 = Button(1050, 300, 120, 50, "Dfs", BLACK, 4, BLUE, action = dfs1)
+b9 = Button(1050, 250, 120, 50, "Dfs", BLACK, 4, BLUE, action = dfs1)
+
+b11 = Button(800, 550, 50, 50, "60", BLACK, 4, BLUE, action = fps60)
+b12 = Button(1000, 550, 50, 50, "40", BLACK, 4, BLUE, action = fps40)
+b13 = Button(1200, 550, 50, 50, "20", BLACK, 4, BLUE, action = fps20)
+b14 = Button(1400, 550, 50, 50, "1", BLACK, 4, BLUE, action = fps1)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
-text_2 = Button(950, 200, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
-text_3 = Button(950, 450, 300, 50, "Controls", BLACK, 1, WHITE)
+text_2 = Button(950, 170, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
+text_3 = Button(950, 400, 300, 50, "Size", BLACK, 1, WHITE)
+text_4 = Button(950, 500, 300, 50, "FPS", BLACK, 1, WHITE)
 
 def draw_nodes():
     b1.draw()
@@ -675,9 +696,15 @@ def draw_nodes():
     b8.draw()
     b9.draw()
     b10.draw()
+    b11.draw()
+    b12.draw()
+    b13.draw()
+    b14.draw()
+
     text_1.draw()
     text_2.draw()
     text_3.draw()
+    text_4.draw()
 
 screen.fill((0, 0 , 0))
 
@@ -709,7 +736,15 @@ if __name__=='__main__':
                     elif b9.rect.collidepoint(event.pos):
                         b9.action() 
                     elif b10.rect.collidepoint(event.pos):
-                        b10.action()     
+                        b10.action() 
+                    elif b11.rect.collidepoint(event.pos):
+                        b11.action() 
+                    elif b12.rect.collidepoint(event.pos):
+                        b12.action()
+                    elif b13.rect.collidepoint(event.pos):
+                        b13.action() 
+                    elif b14.rect.collidepoint(event.pos):
+                        b14.action()                     
                            
         screen.blit(control_surface, control_rect)
         screen.blit(maze_surface, maze_rect)
@@ -717,4 +752,4 @@ if __name__=='__main__':
         draw_nodes()
         
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(FPS)
