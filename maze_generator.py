@@ -639,11 +639,15 @@ def dead_end_filler():
             for y in range(height):
                 if grid[y][x].check_dead_end():
                     if (x, y) != (0, 0) and (x, y) != (width - 1, height - 1):
+                        pygame.draw.rect(screen, PINK, (y* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, x* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+                        pygame.display.update()
                         grid[y][x].fill_cell(x, y)
                         remaining_cells = True
-                draw_maze(grid)
-                pygame.display.update()
-        clock.tick(FPS)  
+                clock.tick(FPS)          
+            draw_maze(grid)
+            pygame.display.update()
+                
+        
 
     currcell = (0, 0)
     visited = []
@@ -668,23 +672,23 @@ b1 = Button(800 ,70 , 120, 50, "Binary Tree", BLACK, 4,BLUE,  action = binary_tr
 b2 = Button(1300 ,70 , 120, 50, "Prims algo", BLACK,4, BLUE, action = prims_algorithm)
 b3 = Button(800 ,250 , 180, 50, "Left wall follower", BLACK,4, BLUE, action = left_wall_follower)
 b4 = Button(1300 ,250 , 120, 50, "Dikshtra", BLACK,4, BLUE, action= dikshtra)
-b10 = Button(1030 ,320 , 150, 50, "Dead end filler", BLACK,4, BLUE, action= dead_end_filler)
+b10 = Button(1030 ,340 , 150, 50, "Dead end filler", BLACK,4, BLUE, action= dead_end_filler)
 
-b5 = Button(800, 450, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
-b6 = Button(1050, 450, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
-b7 = Button(1300, 450, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
-b8 = Button(1050, 700, 120, 50, "RESET", BLACK,6, BLUE, action = reset)
+b5 = Button(800, 470, 120, 50, "5 X 5" ,BLACK, 4, BLUE, action = fiveXfive)
+b6 = Button(1050, 470, 120, 50, "10 X 10" ,BLACK, 4, BLUE, action = tenXten)
+b7 = Button(1300, 470, 120, 50, "20 X 20" ,BLACK, 4, BLUE, action = twentyXtwenty)
+b8 = Button(1050, 690, 120, 50, "RESET", BLACK,6, BLUE, action = reset)
 b9 = Button(1050, 250, 120, 50, "Dfs", BLACK, 4, BLUE, action = dfs1)
 
-b11 = Button(800, 550, 50, 50, "60", BLACK, 4, BLUE, action = fps60)
-b12 = Button(1000, 550, 50, 50, "40", BLACK, 4, BLUE, action = fps40)
-b13 = Button(1200, 550, 50, 50, "20", BLACK, 4, BLUE, action = fps20)
-b14 = Button(1400, 550, 50, 50, "5", BLACK, 4, BLUE, action = fps5)
+b11 = Button(800, 580, 50, 50, "60", BLACK, 4, BLUE, action = fps60)
+b12 = Button(1000, 580, 50, 50, "40", BLACK, 4, BLUE, action = fps40)
+b13 = Button(1200, 580, 50, 50, "20", BLACK, 4, BLUE, action = fps20)
+b14 = Button(1400, 580, 50, 50, "5", BLACK, 4, BLUE, action = fps5)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
 text_2 = Button(950, 170, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
-text_3 = Button(950, 400, 300, 50, "Size", BLACK, 1, WHITE)
-text_4 = Button(950, 500, 300, 50, "FPS", BLACK, 1, WHITE)
+text_3 = Button(950, 420, 300, 50, "Size", BLACK, 1, WHITE)
+text_4 = Button(950, 530, 300, 50, "FPS", BLACK, 1, WHITE)
 
 def draw_nodes():
     b1.draw()
