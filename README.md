@@ -153,7 +153,12 @@ grid = [[Cell() for i in range(width)] for i in range(height)]
   A dictionary to reconstruct the path from the exit to the entrance.
 
   ```python
-    revpath = {}
+    reverse_path = {}
+  ```
+  A list to store the final path from the exit to the entrance by traversing the parent child relationship in the reverse_path dictionary.
+
+  ```python
+    reverse_list = []
   ```
 
 - **Visited Set:**
