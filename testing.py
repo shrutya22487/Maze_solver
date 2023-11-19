@@ -393,14 +393,22 @@ def dead_end_filler():
         visited.append(currcell)
         currcell = step(currcell[0], currcell[1])
 
-for i in range(100):
+total_steps_list = []
+
+for i in range(10):
     binary_tree()
     start_time = time.perf_counter()
-    left_wall_follower()
+    dead_end_filler()
     end_time = time.perf_counter()
+    total_steps_list.append(total_steps*100/32/32)
+    print(total_steps)
+    total_steps = 0
     total_time = total_time + end_time - start_time
     reset()
 
-print("avg time taken  ", total_time * 10)
-print("Number of turns: ",number_of_turns/100)
-print("Path length: " ,total_steps / 100)
+# print("avg time taken  ", total_time * 10)
+mean_perecentage = 0
+for i in range(10):
+    mean_perecentage += total_steps_list[i]
+print("mean percentage", mean_perecentage/10)
+print("percentage list: ", total_steps_list)

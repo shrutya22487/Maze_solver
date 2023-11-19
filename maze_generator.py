@@ -102,7 +102,7 @@ def fps20():
     FPS = 20
 def fps5():
     global FPS
-    FPS = 5
+    FPS = 10
 def fps40():
     global FPS
     FPS = 40    
@@ -518,6 +518,7 @@ def dikshtra():
                                     currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
                                     SMALL_BLOCK_SIZE))
         # pygame.draw.rect(screen, PINK, (currcell[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, currcell[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
+        pygame.display.update()
 
         if currcell == (0, 0):
             break

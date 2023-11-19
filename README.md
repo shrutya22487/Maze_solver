@@ -138,6 +138,8 @@ grid = [[Cell() for i in range(width)] for i in range(height)]
 - **Draw Path:**
   The shortest path is visualized by drawing it on the maze.
 
+
+
 #### Data Structures:
 
 - **Priority Queue (Unvisited):**
@@ -187,6 +189,27 @@ grid = [[Cell() for i in range(width)] for i in range(height)]
 - **Stack:**
  An array based stack to process cells in a particular order.
 
+
+### 6. Dead End Filler Maze Solver:
+
+#### Overview
+
+This Python code for, `dead_end_filler`, is designed to solve mazes represented by a grid of cells. The maze-solving algorithm focuses on filling dead-end cells to optimize the path from the start point (0, 0) to the end point (width - 1, height - 1). It traverses the grid again again until no more dead ends are left in the grid.
+
+#### Components
+
+#### `step(x, y)`
+
+- Function to determine the next step in the maze-solving process based on the current position (x, y) and the surrounding cells' connectivity.
+
+### Maze Solving Loop
+
+- The script iterates through the maze cells, identifying and filling dead-end cells until no more dead-end cells remain. Note that more dead ends will be produced after each iteration of the algorithm, which will be consequently filled again.
+
+
+### Maze Traversal
+
+- After dead-end filling, the script visually traces the optimal path from the start
 ---
 
 #### Requirements:
