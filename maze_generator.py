@@ -97,10 +97,10 @@ grid = [[Cell() for i in range(width)] for i in range(height)]
 def fps60():
     global FPS
     FPS = 60
-def fps20():
-    global FPS
-    FPS = 20
 def fps5():
+    global FPS
+    FPS = 5
+def fps1():
     global FPS
     FPS = 1
 def fps40():
@@ -513,8 +513,11 @@ def dikshtra():
     unvisited[currcell] = 0
 
     while unvisited:
+        pygame.draw.rect(screen, PINK, ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                    currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+                                    SMALL_BLOCK_SIZE))
         currcell = min_cell()
-        pygame.draw.rect(screen, PINK ,( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+        pygame.draw.rect(screen, RED ,( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
                                     currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
                                     SMALL_BLOCK_SIZE))
         # pygame.draw.rect(screen, PINK, (currcell[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, currcell[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
@@ -553,9 +556,7 @@ def dikshtra():
             if childCell != 0 and temp_dist < unvisited[childCell]:
                 unvisited[childCell] = temp_dist
                 reverse_path[childCell] = currcell
-        # pygame.draw.rect(screen, GRAY , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
-                                    # currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
-                                    # SMALL_BLOCK_SIZE))
+        
         pygame.display.update()
         visited.append(currcell)
         unvisited.pop(currcell)
@@ -683,8 +684,8 @@ b9 = Button(1050, 250, 120, 50, "Dfs", BLACK, 4, BLUE, action = dfs1)
 
 b11 = Button(800, 580, 50, 50, "60", BLACK, 4, BLUE, action = fps60)
 b12 = Button(1000, 580, 50, 50, "40", BLACK, 4, BLUE, action = fps40)
-b13 = Button(1200, 580, 50, 50, "20", BLACK, 4, BLUE, action = fps20)
-b14 = Button(1400, 580, 50, 50, "5", BLACK, 4, BLUE, action = fps5)
+b13 = Button(1200, 580, 50, 50, "5", BLACK, 4, BLUE, action = fps5)
+b14 = Button(1400, 580, 50, 50, "1", BLACK, 4, BLUE, action = fps1)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
 text_2 = Button(950, 170, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
