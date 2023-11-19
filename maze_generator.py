@@ -100,9 +100,9 @@ def fps60():
 def fps20():
     global FPS
     FPS = 20
-def fps1():
+def fps5():
     global FPS
-    FPS = 1
+    FPS = 5
 def fps40():
     global FPS
     FPS = 40    
@@ -506,7 +506,7 @@ def dikshtra():
             for j in range(len(grid[0])):
                 unvisited[(i, j)] = 10000
     
-    unvisited,revpath, visited = {}, {} , []
+    unvisited,reverse_path, visited = {}, {} , []
     #setting all the values in unvisited to infinity
     set_all_to_infinity()
     currcell = (width - 1, height - 1 )
@@ -514,7 +514,7 @@ def dikshtra():
 
     while unvisited:
         currcell = min_cell()
-        pygame.draw.rect(screen, PINK , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+        pygame.draw.rect(screen, PINK ,( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
                                     currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
                                     SMALL_BLOCK_SIZE))
         # pygame.draw.rect(screen, PINK, (currcell[1]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, currcell[0]* CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE, SMALL_BLOCK_SIZE))
@@ -551,7 +551,7 @@ def dikshtra():
 
             if childCell != 0 and temp_dist < unvisited[childCell]:
                 unvisited[childCell] = temp_dist
-                revpath[childCell] = currcell
+                reverse_path[childCell] = currcell
         pygame.draw.rect(screen, GRAY , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
                                     currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
                                     SMALL_BLOCK_SIZE))
@@ -560,14 +560,15 @@ def dikshtra():
         unvisited.pop(currcell)
         clock.tick(FPS)
 
-    fwdpath = {}
+    final_path = {}
     cell = (0,0)
     while cell != ( width - 1, height - 1):
-        fwdpath[revpath[cell]] = cell
-        cell = revpath[cell]
-
-    draw_path( fwdpath ) 
-    # print(revpath)
+        final_path[cell] = reverse_path[cell]
+        cell = reverse_path[cell]
+    reverse_list = list(final_path.values())
+    forward_list = reverse_list[::-1]
+    draw_path( forward_list ) 
+    # print(reverse_path)
     pygame.time.delay(3000)
 
 def dfs1():
@@ -678,7 +679,7 @@ b9 = Button(1050, 250, 120, 50, "Dfs", BLACK, 4, BLUE, action = dfs1)
 b11 = Button(800, 550, 50, 50, "60", BLACK, 4, BLUE, action = fps60)
 b12 = Button(1000, 550, 50, 50, "40", BLACK, 4, BLUE, action = fps40)
 b13 = Button(1200, 550, 50, 50, "20", BLACK, 4, BLUE, action = fps20)
-b14 = Button(1400, 550, 50, 50, "1", BLACK, 4, BLUE, action = fps1)
+b14 = Button(1400, 550, 50, 50, "5", BLACK, 4, BLUE, action = fps5)
 
 text_1 = Button(950, 10, 300, 50, "Maze Generation Algorithms", BLACK,1, WHITE)
 text_2 = Button(950, 170, 300, 50, "Maze Solving Algorithms", BLACK,1, WHITE)
