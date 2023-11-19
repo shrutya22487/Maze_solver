@@ -228,7 +228,7 @@ This Python code for, `dead_end_filler`, is designed to solve mazes represented 
 2. Run the script using a Python interpreter.
 
 ```bash
-python prims_algorithm.py
+python maze_generator.py
 ```
 
 3. Follow the on-screen instructions to generate a maze using Prim's algorithm.
