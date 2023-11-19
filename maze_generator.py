@@ -102,7 +102,7 @@ def fps20():
     FPS = 20
 def fps5():
     global FPS
-    FPS = 10
+    FPS = 1
 def fps40():
     global FPS
     FPS = 40    
@@ -553,9 +553,9 @@ def dikshtra():
             if childCell != 0 and temp_dist < unvisited[childCell]:
                 unvisited[childCell] = temp_dist
                 reverse_path[childCell] = currcell
-        pygame.draw.rect(screen, GRAY , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
-                                    currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
-                                    SMALL_BLOCK_SIZE))
+        # pygame.draw.rect(screen, GRAY , ( currcell[1] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2,
+                                    # currcell[0] * CELL_SIZE + (CELL_SIZE - SMALL_BLOCK_SIZE) // 2, SMALL_BLOCK_SIZE,
+                                    # SMALL_BLOCK_SIZE))
         pygame.display.update()
         visited.append(currcell)
         unvisited.pop(currcell)
