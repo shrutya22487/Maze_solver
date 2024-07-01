@@ -53,12 +53,17 @@ Welcome to the Maze Solver repository! This project demonstrates various maze ge
 Here's a glimpse of the magic:
 
 ### Maze Generation
+
 <img src="images\image-1.png" width="100%" alt="Maze Generation 1">
 
 ### Maze Solving
-<img src="images\image-3.png" width="40%" alt="Maze Generation 2">
-<img src="images\image.png" width="40%" alt="Maze Generation 2">
-<img src="images\image-4.png" width="45%" alt="Maze Generation 2">
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+  <img src="images\image-3.png" width="400" alt="Maze Generation 2">
+  <img src="images\image.png" width="400" alt="Maze Generation 2">
+</div>
+  <img src="images\image-4.png" width="400" alt="Maze Generation 2">
+
+
 
 
 ## 📄 Documentation
