@@ -2,6 +2,10 @@
 
 Welcome to the Maze Solver repository! This project demonstrates various maze generation and solving algorithms using the Pygame library. Dive into the fascinating world of algorithms and watch them come to life with real-time visualizations!
 
+## 🎥 Demo
+
+Check out our demo video on YouTube to see the Maze Solver in action: [Watch the demo](https://www.youtube.com/watch?v=JTPKxtpIqa0)
+
 ## 🚀 Features
 
 - **Maze Generation**: Create intricate mazes using:
