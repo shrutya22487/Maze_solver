@@ -6,6 +6,20 @@ Welcome to the Maze Solver repository! This project demonstrates various maze ge
 
 Check out our demo video on YouTube to see the Maze Solver in action: [Watch the demo](https://www.youtube.com/watch?v=JTPKxtpIqa0)
 
+## 🖼️ Gallery
+Here's a glimpse of the magic:
+
+### Maze Generation
+
+<img src="images\image-1.png" width="100%" alt="Maze Generation 1">
+
+### Maze Solving
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+  <img src="images\image-3.png" width="400" alt="Maze Generation 2">
+  <img src="images\image.png" width="400" alt="Maze Generation 2">
+</div>
+  <img src="images\image-4.png" width="400" alt="Maze Generation 2">
+  
 ## 🚀 Features
 
 - **Maze Generation**: Create intricate mazes using:
@@ -52,23 +66,6 @@ Check out our demo video on YouTube to see the Maze Solver in action: [Watch the
 
 ### Reset Grid
 - **Reset**: `initialize_grid(width, height)`
-
-## 🖼️ Gallery
-Here's a glimpse of the magic:
-
-### Maze Generation
-
-<img src="images\image-1.png" width="100%" alt="Maze Generation 1">
-
-### Maze Solving
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-  <img src="images\image-3.png" width="400" alt="Maze Generation 2">
-  <img src="images\image.png" width="400" alt="Maze Generation 2">
-</div>
-  <img src="images\image-4.png" width="400" alt="Maze Generation 2">
-
-
-
 
 ## 📄 Documentation
 # Maze Generation Algorithms
